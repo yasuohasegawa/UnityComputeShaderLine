@@ -1,0 +1,28 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+#define THREAD_BLOCK_SIZE 256
+
+struct LineData
+{
+    float3 pos0;
+    float3 pos1;
+    float3 pos2;
+    float3 pos3;
+};
+
+RWStructuredBuffer<float3> PositionBuffer;
+RWStructuredBuffer<LineData> LineDataBuffer;
+RWStructuredBuffer<int> VisibleBuffer;
+
+[numthreads(THREAD_BLOCK_SIZE, 1, 1)]
+void CSMain (uint id : SV_DispatchThreadID)
+{
+    float3 pos = PositionBuffer[id];
+    PositionBuffer[id] = pos;
+
+    LineData lineData = LineDataBuffer[id];
+    LineDataBuffer[id] = lineData;
+
+    int visible = VisibleBuffer[id];
+    VisibleBuffer[id] = visible;
+}
