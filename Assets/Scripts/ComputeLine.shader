@@ -1,6 +1,7 @@
 ﻿Shader "Custom/Compute" {
 	Properties{
 		_Color("Color", Color) = (1,1,1,1)
+		_MainTex("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness("Smoothness", Range(0,1)) = 0.5
 		_Metallic("Metallic", Range(0,1)) = 0.0
 	}
@@ -14,6 +15,8 @@
 #pragma surface surf Standard fullforwardshadows vertex:vert
 #pragma multi_compile_instancing
 #pragma instancing_options procedural:setup
+
+		sampler2D _MainTex;
 
 		struct Input {
 			float2 uv_MainTex;
@@ -63,6 +66,7 @@
 		}
 
 		void surf(Input IN, inout SurfaceOutputStandard o) {
+			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
 			if (VisibleBuffer[unity_InstanceID] == 0) {
 				o.Albedo = float4(1.0,0.0,0.0,1.0);
@@ -70,7 +74,7 @@
 			}
 			else
 			{
-				o.Albedo = _Color;
+				o.Albedo = c.rgb;
 			}
 #endif
 			o.Metallic = _Metallic;

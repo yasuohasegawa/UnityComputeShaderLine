@@ -185,8 +185,12 @@ public class ComputeShaderLine : MonoBehaviour {
 
         Vector3 left, right;
 
+        Vector3 direction = Vector3.up;
         Vector3 forward = Vector3.Normalize(points[pointCount - 1] - points[pointCount]);
-        Vector3 r = Vector3.Cross(Vector3.Normalize(Vector3.up), forward);
+        Vector3 r = Vector3.Cross(direction, forward);
+
+        // note: Below is how to calculate up vector.
+        // Vector3 up = Vector3.Cross(forward, right); 
 
         right = points[pointCount - 1] + r * lineWidth / 2f;
         left = points[pointCount - 1] - r * lineWidth / 2f;
@@ -194,7 +198,7 @@ public class ComputeShaderLine : MonoBehaviour {
         ld[pointCount - 1].pos1 = right;
 
         forward = Vector3.Normalize(points[points.Count - 1] - points[points.Count - 2]);
-        r = Vector3.Cross(Vector3.Normalize(Vector3.up), forward);
+        r = Vector3.Cross(direction, forward);
 
         right = points[points.Count - 1] + r * lineWidth / 2f;
         left = points[points.Count - 1] - r * lineWidth / 2f;
